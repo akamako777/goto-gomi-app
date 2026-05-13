@@ -204,35 +204,36 @@
             </main>
 
 <nav class="flex-none bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-t border-gray-200 dark:border-gray-700 pb-safe z-30 absolute bottom-0 w-full max-w-5xl mx-auto left-0 right-0">
-            <div class="flex justify-around items-center h-16">
-                <button onclick="navTo('home')" class="nav-btn active flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors" data-target="home">
-                    <i class="fa-solid fa-house text-lg mb-1"></i>
-                    <span class="text-[10px] font-medium" data-t="nav_home">ホーム</span>
-                </button>
-                
-                <button onclick="openNews()" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors relative" data-target="news">
-                    <i class="fa-solid fa-bell text-lg mb-1 relative">
-                        <span id="news-badge" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border border-white dark:border-gray-800 rounded-full animate-pulse"></span>
-                    </i>
-                    <span class="text-[10px] font-medium">お知らせ</span>
-                </button>
+    <div class="flex justify-around items-center h-16">
+        <button onclick="navTo('home')" class="nav-btn active flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors" data-target="home">
+            <i class="fa-solid fa-house text-lg mb-1"></i>
+            <span class="text-[10px] font-medium" data-t="nav_home">ホーム</span>
+        </button>
+        
+        <button onclick="openNews()" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors relative" data-target="news">
+            <i class="fa-solid fa-bell text-lg mb-1 relative">
+                <span id="news-badge" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border border-white dark:border-gray-800 rounded-full animate-pulse"></span>
+            </i>
+            <span class="text-[10px] font-medium">お知らせ</span>
+        </button>
 
-                <button onclick="navTo('search')" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors" data-target="search">
-                    <i class="fa-solid fa-magnifying-glass text-lg mb-1"></i>
-                    <span class="text-[10px] font-medium" data-t="nav_search">分別検索</span>
-                </button>
+        <button onclick="navTo('search')" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors" data-target="search">
+            <i class="fa-solid fa-magnifying-glass text-lg mb-1"></i>
+            <span class="text-[10px] font-medium" data-t="nav_search">分別検索</span>
+        </button>
 
-                <button onclick="showGeminiConsent()" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors">
-                    <i class="fa-solid fa-wand-magic-sparkles text-lg mb-1"></i>
-                    <span class="text-[10px] font-medium">AI相談</span>
-                </button>
+        <button onclick="navTo('guide')" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors" data-target="guide">
+            <i class="fa-solid fa-book-open text-lg mb-1"></i>
+            <span class="text-[10px] font-medium" data-t="nav_guide">ガイド</span>
+        </button>
 
-                <button onclick="navTo('settings')" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors" data-target="settings">
-                    <i class="fa-solid fa-gear text-lg mb-1"></i>
-                    <span class="text-[10px] font-medium" data-t="nav_settings">設定</span>
-                </button>
-            </div>
-        </nav>
+        <button onclick="navTo('settings')" class="nav-btn flex-1 flex flex-col items-center justify-center h-full text-gray-400 hover:text-brand transition-colors" data-target="settings">
+            <i class="fa-solid fa-gear text-lg mb-1"></i>
+            <span class="text-[10px] font-medium" data-t="nav_settings">設定</span>
+        </button>
+    </div>
+</nav>
+
 
 
         <div id="modal-overlay" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center backdrop-blur-sm opacity-0 transition-opacity duration-300 p-4">
@@ -2553,12 +2554,38 @@ const d = ('0' + todayDate.getDate()).slice(-2);
 
 
 
-      function renderSearch() {
+function renderSearch() {
+            // ▼ AIボタン用の多言語辞書 (新規追加) ▼
+            const SRCH_TXT = {
+                ja: { aiBtn: "AIに写真で分別相談する", aiSub: "「これ何ゴミ？」迷ったらカメラで確認" },
+                en: { aiBtn: "Ask AI with Photo", aiSub: "Use camera to check sorting" },
+                es: { aiBtn: "Consultar a la IA con foto", aiSub: "Usa la cámara para verificar" },
+                zh: { aiBtn: "用照片向 AI 諮詢", aiSub: "不知道怎麼分？用相機確認" },
+                my: { aiBtn: "AI ကို ဓာတ်ပုံဖြင့် မေးမည်", aiSub: "ကင်မရာဖြင့် အမှိုက်ခွဲခြားမှုစစ်ဆေးရန်" },
+                vi: { aiBtn: "Hỏi AI bằng ảnh", aiSub: "Dùng máy ảnh để kiểm tra phân loại" }
+            };
+            const s = SRCH_TXT[state.lang] || SRCH_TXT.ja;
+
             const hasSpeech = !!SpeechRecognition;
             
             let html = `
                 <div class="fade-in h-full flex flex-col">
                     <div class="sticky top-0 bg-gray-50 dark:bg-gray-900 pb-4 z-20">
+                        <div class="max-w-2xl mx-auto w-full px-2 mt-2 mb-4">
+                            <button onclick="showGeminiConsent()" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-xl shadow-md active:scale-95 transition-transform flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="bg-white/20 p-2 rounded-lg group-hover:rotate-12 transition-transform">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                                    </div>
+                                    <div class="text-left">
+                                        <div class="text-sm font-bold">${s.aiBtn}</div>
+                                        <div class="text-[10px] text-indigo-100 font-normal">${s.aiSub}</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-indigo-200"></i>
+                            </button>
+                            </div>
+
                         <div class="relative group max-w-2xl mx-auto w-full flex gap-2">
                             <div class="relative flex-1">
                                 <input type="search" id="sInput" placeholder="${t('search_ph')}" 
@@ -2596,7 +2623,7 @@ const d = ('0' + todayDate.getDate()).slice(-2);
             main.innerHTML = html;
         }
 
-        // ▼ 音声検索ロジック (新規追加) ▼
+        // ▼ 音声検索ロジック (既存のまま) ▼
         function startVoiceSearch() {
             if (!SpeechRecognition) return;
             
@@ -2633,7 +2660,6 @@ const d = ('0' + todayDate.getDate()).slice(-2);
                 showToast("音声認識できませんでした");
             };
         }
-
 
         function doSearch(q) {
             const el = document.getElementById('sResults');
@@ -2707,6 +2733,7 @@ const d = ('0' + todayDate.getDate()).slice(-2);
                 }).join('')}
              </div>`;
         }
+
 
 
     function renderGuide() {
@@ -4166,3 +4193,7 @@ END:VCALENDAR`;
 </script>
 </body>
 </html>
+
+
+
+
